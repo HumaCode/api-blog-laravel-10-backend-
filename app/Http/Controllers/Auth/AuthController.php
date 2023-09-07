@@ -53,4 +53,13 @@ class AuthController extends Controller
             'token' => auth()->user()->createToken('scret')->plainTextToken
         ], 200);
     }
+
+    public function logout()
+    {
+        auth()->user()->tokens()->delete();
+
+        return response([
+            'message' => 'Logout Success..',
+        ], 200);
+    }
 }
