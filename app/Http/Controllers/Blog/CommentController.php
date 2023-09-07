@@ -50,4 +50,33 @@ class CommentController extends Controller
             'message' => 'Comment created..',
         ], 200);
     }
+
+    public function update(Request $request, $id)
+    {
+        $comment = Comment::find($id);
+
+        if (!$comment) {
+            return response([
+                'message' => 'Comment not found..',
+            ], 404);
+        }
+
+        if ($comment->user_id != auth()->user()->id) {
+            return response([
+                'message' => 'Permission denied..',
+            ], 403);
+        }
+
+        $attr = $request->validate([
+            'comment' => 'required|string',
+        ]);
+
+        $comment->update([
+            'comment' => $attr['comment']
+        ]);
+
+        return response([
+            'message' => 'Comment updated..',
+        ], 200);
+    }
 }
