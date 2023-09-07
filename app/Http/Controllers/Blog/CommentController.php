@@ -79,4 +79,27 @@ class CommentController extends Controller
             'message' => 'Comment updated..',
         ], 200);
     }
+
+    public function delete($id)
+    {
+        $comment = Comment::find($id);
+
+        if (!$comment) {
+            return response([
+                'message' => 'Comment not found..',
+            ], 404);
+        }
+
+        if ($comment->user_id != auth()->user()->id) {
+            return response([
+                'message' => 'Permission denied..',
+            ], 403);
+        }
+
+        $comment->delete();
+
+        return response([
+            'message' => 'Comment deleted..',
+        ], 200);
+    }
 }
