@@ -21,4 +21,23 @@ class PostController extends Controller
             'post' => Post::where('id', $id)->withCount('comments', 'likes')->get(),
         ], 200);
     }
+
+    public function store(Request $request)
+    {
+        $attr = $request->validate([
+            'body' => 'required|string',
+        ]);
+
+        $post = Post::create([
+            'body'      => $attr['body'],
+            'user_id'   => auth()->user()->id,
+        ]);
+
+        // lewati upload gambar
+
+        return response([
+            'message' => 'Post created',
+            'post' => $post,
+        ], 200);
+    }
 }
