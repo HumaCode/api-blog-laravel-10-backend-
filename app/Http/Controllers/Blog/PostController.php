@@ -28,12 +28,14 @@ class PostController extends Controller
             'body' => 'required|string',
         ]);
 
+        $image = $this->saveImage($request->image, 'posts');
+
         $post = Post::create([
             'body'      => $attr['body'],
             'user_id'   => auth()->user()->id,
+            'image'     => $image,
         ]);
 
-        // lewati upload gambar
 
         return response([
             'message' => 'Post created',
