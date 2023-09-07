@@ -1,6 +1,9 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Blog\CommentController;
+use App\Http\Controllers\Blog\LikeController;
+use App\Http\Controllers\Blog\PostController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -28,4 +31,21 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     // userlogin
     Route::get('user', [AuthController::class, 'user']);
+
+
+    // post
+    Route::get('posts', [PostController::class, 'index']);
+    Route::post('posts', [PostController::class, 'store']);
+    Route::get('posts/{id}', [PostController::class, 'show']);
+    Route::put('posts/{id}', [PostController::class, 'update']);
+    Route::delete('posts/{id}', [PostController::class, 'destroy']);
+
+    // comment
+    Route::get('posts/{id}/comments', [CommentController::class, 'index']);
+    Route::post('posts/{id}/comments', [CommentController::class, 'store']);
+    Route::put('comment/{id}', [CommentController::class, 'update']);
+    Route::delete('comment/{id}', [CommentController::class, 'destroy']);
+
+    // like
+    Route::post('posts/{id}/likes', [LikeController::class, 'likeOrUnlike']);
 });
