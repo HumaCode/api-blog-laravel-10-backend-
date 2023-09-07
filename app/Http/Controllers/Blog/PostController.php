@@ -73,4 +73,31 @@ class PostController extends Controller
             'post' => $post,
         ], 200);
     }
+
+    public function destroy($id)
+    {
+        $post = Post::find($id);
+
+        // jika tidak ada post
+        if (!$post) {
+            return response([
+                'message' => 'Post not found..',
+            ], 404);
+        }
+
+        if ($post->user_id != auth()->user()->id) {
+            return response([
+                'message' => 'Permission denied..',
+            ], 403);
+        }
+
+        // delete
+        $post->comments->delete();
+        $post->likes->delete();
+        $post->delete();
+
+        return response([
+            'message' => 'Post deleted',
+        ], 200);
+    }
 }
