@@ -14,4 +14,11 @@ class PostController extends Controller
             'posts' => Post::orderBy('created_at', 'desc')->with('user:id,name,image')->withCount('comments', 'like')->get(),
         ], 200);
     }
+
+    public function show($id)
+    {
+        return response([
+            'post' => Post::where('id', $id)->withCount('comments', 'likes')->get(),
+        ]);
+    }
 }
