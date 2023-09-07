@@ -31,6 +31,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     // userlogin
     Route::get('user', [AuthController::class, 'user']);
+    Route::put('user', [AuthController::class, 'update']);
 
 
     // post
