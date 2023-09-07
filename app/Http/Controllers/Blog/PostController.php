@@ -40,4 +40,37 @@ class PostController extends Controller
             'post' => $post,
         ], 200);
     }
+
+    public function update(Request $request, $id)
+    {
+        $post = Post::find($id);
+
+        // jika tidak ada post
+        if (!$post) {
+            return response([
+                'message' => 'Post not found..',
+            ], 404);
+        }
+
+        if ($post->user_id != auth()->user()->id) {
+            return response([
+                'message' => 'Permission denied..',
+            ], 403);
+        }
+
+        $attr = $request->validate([
+            'body' => 'required|string',
+        ]);
+
+        $post->update([
+            'body'      => $attr['body'],
+        ]);
+
+        // lewati upload gambar
+
+        return response([
+            'message' => 'Post updated',
+            'post' => $post,
+        ], 200);
+    }
 }
