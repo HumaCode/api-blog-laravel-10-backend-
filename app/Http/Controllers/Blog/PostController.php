@@ -19,6 +19,6 @@ class PostController extends Controller
     {
         return response([
             'post' => Post::where('id', $id)->withCount('comments', 'likes')->get(),
-        ]);
+        ], 200);
     }
 }
