@@ -5,9 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
-use Illuminate\Support\Facades\Storage;
-use PharIo\Manifest\Url;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\URL;
 
 class Controller extends BaseController
 {
@@ -15,29 +13,19 @@ class Controller extends BaseController
 
     public function saveImage($image, $path = 'public')
     {
-        if (!$image || !base64_decode($image, true)) {
+        if (!$image) {
             return null;
         }
 
         // Ambil ekstensi gambar dari data gambar yang diterima
         $imageData = base64_decode($image);
         $extension = $this->getImageExtension($imageData);
-
-        // Generate filename with the correct extension
         $filename = time() . '.' . $extension;
 
-        try {
-            // Simpan gambar ke penyimpanan
-            Storage::disk($path)->put($filename, base64_decode($image));
+        // $filename = time() . '.png';
+        \Storage::disk($path)->put($filename, base64_decode($image));
 
-            // Dapatkan URL gambar yang disimpan
-            $url = Storage::url($filename);
-
-            return $url;
-        } catch (\Exception $e) {
-            \Log::error('Gagal menyimpan gambar: ' . $e->getMessage());
-            return null;
-        }
+        return URL::to('/') . '/storage/' . $path . '/' . $filename;
     }
 
     // Fungsi untuk mendapatkan ekstensi gambar
