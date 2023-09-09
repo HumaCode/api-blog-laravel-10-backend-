@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Blog;
 use App\Http\Controllers\Controller;
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -88,6 +89,8 @@ class PostController extends Controller
     {
         $post = Post::find($id);
 
+
+
         // jika tidak ada post
         if (!$post) {
             return response([
@@ -101,9 +104,18 @@ class PostController extends Controller
             ], 403);
         }
 
+        $path = parse_url($post->image, PHP_URL_PATH);
+
+
+
+        // hapus foto lama
+        if ($post->image <> null) {
+            unlink(public_path() . $path);
+        }
+
         // delete
-        $post->comments->delete();
-        $post->likes->delete();
+        $post->comments()->delete();
+        $post->likes()->delete();
         $post->delete();
 
         return response([
