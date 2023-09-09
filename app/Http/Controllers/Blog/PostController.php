@@ -34,7 +34,7 @@ class PostController extends Controller
     public function store(Request $request)
     {
         $attr = $request->validate([
-            'body' => 'required|string',
+            'body'  => 'required|string',
         ]);
 
         $image = $this->saveImage($request->image, 'posts');
@@ -73,15 +73,30 @@ class PostController extends Controller
             'body' => 'required|string',
         ]);
 
-        $post->update([
-            'body'      => $attr['body'],
-        ]);
+        if ($request->has('image') && !empty($request->image)) {
 
-        // lewati upload gambar
+            $path = parse_url($post->image, PHP_URL_PATH);
+
+            // hapus foto lama
+            if ($post->image <> null) {
+                unlink(public_path() . $path);
+            }
+
+            $image = $this->saveImage($request->image, 'posts');
+
+            $post->update([
+                'body'      => $attr['body'],
+                'image'     => $image
+            ]);
+        } else {
+            $post->update([
+                'body'      => $attr['body'],
+            ]);
+        }
 
         return response([
-            'message' => 'Post updated',
-            'post' => $post,
+            'message'   => 'Post updated',
+            'post'      => $post,
         ], 200);
     }
 
