@@ -80,7 +80,7 @@ class CommentController extends Controller
         ], 200);
     }
 
-    public function delete($id)
+    public function destroy($id)
     {
         $comment = Comment::find($id);
 
